@@ -1,0 +1,65 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            group "com.example.v2tien.awesomelib"
+            artifactId "awesomelib"
+            version "1.0"
+            // nó sẽ ra được như nè :  'com.nam.libraries:awesomelib:1.0.1'
+        }
+    }
+}
+bintray {
+    user = "v2tien"
+    key =  "209a79ad29c755545de304f08cb7978881d07dd3"
+
+    configurations = ['awesomelib']
+    pkg {
+        repo = 'MySample'  // đây là repo bạn tạo trên Bintray . nếu k có sẽ báo lỗi HTTP 404
+        name = 'MySamplePack'
+        userOrg = "v2tien"
+        licenses = ['Apache-2.0']
+        publish = true
+        vcsUrl = 'https://github.com/v2tien/SampleTest.git'  // đây là repo  trên git bạn đã tạo ở bước trên
+        publicDownloadNumbers = true
+        version {
+            name = '0.1'
+            desc = 'Gradle Bintray Plugin 1.0 final'
+            vcsTag = '0.1'
+        }
+    }
+}
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'com.android.support:appcompat-v7:28.0.0-alpha3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
