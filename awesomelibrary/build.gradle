@@ -2,36 +2,60 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-install {
-    repositories.mavenInstaller {
-        pom.project {
-            group "com.example.v2tien.awesomelib"
-            artifactId "awesomelib"
-            version "1.0"
-            // nó sẽ ra được như nè :  'com.nam.libraries:awesomelib:1.0.1'
-        }
-    }
-}
-bintray {
-    user = "v2tien"
-    key =  "209a79ad29c755545de304f08cb7978881d07dd3"
+ext {
+    bintrayRepo = 'MySample'
+    bintrayName = 'Awesomelib'
 
-    configurations = ['awesomelib']
-    pkg {
-        repo = 'MySample'  // đây là repo bạn tạo trên Bintray . nếu k có sẽ báo lỗi HTTP 404
-        name = 'Awesomelib'
-        userOrg = "v2tien"
-        licenses = ['Apache-2.0']
-        publish = true
-        vcsUrl = 'https://github.com/v2tien/AwesomeLib.git'  // đây là repo  trên git bạn đã tạo ở bước trên
-        publicDownloadNumbers = true
-        version {
-            name = '0.1'
-            desc = 'Gradle Bintray Plugin 1.0 final'
-            vcsTag = '0.1'
-        }
-    }
+    publishedGroupId = 'com.example.v2tien.awesomelib'
+    libraryName = 'awesomelibrary'
+    artifact = 'awesomelibrary'
+
+    libraryDescription = 'This view is a container that supports diagonal scroll and fling gesture. It is based on AOSP HorizontalScrollView.'
+
+    siteUrl = 'https://github.com/v2tien/AwesomeLib'
+    gitUrl = 'https://github.com/v2tien/AwesomeLib.git'
+
+    libraryVersion = '0.1'
+
+    developerId = 'v2tien'
+    developerName = 'vutien'
+    developerEmail = 'v2tien@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
 }
+
+//install {
+//    repositories.mavenInstaller {
+//        pom.project {
+//            group "com.example.v2tien.awesomelib"
+//            artifactId "awesomelib"
+//            version "1.0"
+//            // nó sẽ ra được như nè :  'com.nam.libraries:awesomelib:1.0.1'
+//        }
+//    }
+//}
+//bintray {
+//    user = "v2tien"
+//    key =  "209a79ad29c755545de304f08cb7978881d07dd3"
+//
+//    configurations = ['awesomelib']
+//    pkg {
+//        repo = 'MySample'  // đây là repo bạn tạo trên Bintray . nếu k có sẽ báo lỗi HTTP 404
+//        name = 'Awesomelib'
+//        userOrg = "v2tien"
+//        licenses = ['Apache-2.0']
+//        publish = true
+//        vcsUrl = 'https://github.com/v2tien/AwesomeLib.git'  // đây là repo  trên git bạn đã tạo ở bước trên
+//        publicDownloadNumbers = true
+//        version {
+//            name = '0.1'
+//            desc = 'Gradle Bintray Plugin 1.0 final'
+//            vcsTag = '0.1'
+//        }
+//    }
+//}
 
 android {
     compileSdkVersion 28
@@ -62,4 +86,85 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
+group = publishedGroupId
+version = libraryVersion
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            packaging 'aar'
+            groupId publishedGroupId
+            artifactId artifact
+
+            name libraryName
+            description libraryDescription
+            url siteUrl
+
+            licenses {
+                license {
+                    name licenseName
+                    url licenseUrl
+                }
+            }
+            developers {
+                developer {
+                    id developerId
+                    name developerName
+                    email developerEmail
+                }
+            }
+            scm {
+                connection gitUrl
+                developerConnection gitUrl
+                url siteUrl
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = bintrayRepo
+        name = bintrayName
+        desc = libraryDescription
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = allLicenses
+        dryRun = false
+        publish = true
+        override = false
+        publicDownloadNumbers = true
+        version {
+            desc = libraryDescription
+        }
+    }
 }

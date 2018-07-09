@@ -10,11 +10,33 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.1.3'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
-
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
+//ext {
+//    bintrayRepo = 'maven'
+//    bintrayName = 'diagonalscrollview'
+//
+//    publishedGroupId = 'ua.org.tenletters.widget'
+//    libraryName = 'DiagonalScrollView'
+//    artifact = 'diagonalscrollview'
+//
+//    libraryDescription = 'test'
+//
+//    siteUrl = 'https://github.com/LissF/DiagonalScrollView'
+//    gitUrl = 'https://github.com/LissF/DiagonalScrollView.git'
+//
+//    libraryVersion = '0.1'
+//
+//    developerId = 'lissf'
+//    developerName = 'Yegor Zatsepin'
+//    developerEmail = 'Liss_F@ukr.net'
+//
+//    licenseName = 'The Apache Software License, Version 2.0'
+//    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//    allLicenses = ["Apache-2.0"]
+//}
 
 allprojects {
     repositories {
